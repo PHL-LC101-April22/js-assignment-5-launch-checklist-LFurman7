@@ -3,7 +3,7 @@ require('isomorphic-fetch');
 
 function addDestinationInfo(document, name, diameter, star, distance, moons, imageUrl) {
    // Here is the HTML formatting for our mission target div.
-    let missionTarget = document.getElementById('missionTarget')
+    let missionTarget = document.getElementById('missionTarget');
     missionTarget.innerHTML = 
     ` <h2>Mission Destination</h2>
         <ol>
@@ -14,54 +14,67 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
             <li>Number of Moons: ${moons}</li>
         </ol>
         <img src="${imageUrl}">
-   `;
+   `
 }
 
 function validateInput(testInput) {
-   if(testInput === ""){
-    return "Empty";
-   } else if(isNaN(testInput) === true) {
-    return "Not a Number"
-   } else if(isNaN(testInput) === false) {
-    return "Is a Number";};
+   if(testInput === "" || testInput === null){
+    return `Empty`;
+   } else if((!isNaN(Number(testInput)))) {
+    return `Is a Number`;
+   } else {
+    return `Not a Number`;}
 }
 
 function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
-    let faultyItems = document.getElementById("faultyItems");
     let pilotStatus = document.getElementById("pilotStatus");
     let copilotStatus = document.getElementById("copilotStatus");
     let fuelStatus = document.getElementById("fuelStatus");
     let cargoStatus = document.getElementById("cargoStatus");
     let launchStatus = document.getElementById("launchStatus");
 
-    if (validateInput(pilot.value) === "Is a Number" || validateInput(copilot.value) === "Is a Number" || validateInput(fuelLevel.value) === "Not a Number" || validateInput(cargoLevel.value) === "Not a Number") {
-        alert("Invalid input!");}
+    //if
+
+    if(validateInput(pilot.value) === `Is a Number` || validateInput(copilot.value) === `Is a Number`) {
+        alert("Please input Names only for Pilot & Copilot")
+    } 
+    else if(validateInput(fuelLevel.value) === `Not a Number` || validateInput(cargoLevel.value) === `Not a Number`) {
+        alert("Please input Numbers only for Fuel & Cargo Levels");
+    }
     else {
         pilotStatus.innerHTML = `Pilot: ${pilot.value}`;
         copilotStatus.innerHTML = `Co-pilot: ${copilot.value}`
-        if (fuelLevel.value < 10000){
+        fuelStatus.innerHTML = `Fuel: ${fuelStatus.value}`
+        cargoStatus.innerHTML = `Cargo: ${cargoStatus.value}`
+        list.style.visibility = "hidden";
+    }
+
+    if (fuelLevel.value < 10000){
             fuelStatus.innerHTML =  "Fuel level is too low for takeoff!";
             faultyItems.style.visibility = "visible";
-            launchStatus.innerHTML = "Shuttle not ready for launch";
+            launchStatus.innerHTML = "Shuttle is not ready for launch";
             launchStatus.style.color = "red";
-        } 
-        else if (cargoLevel.value > 10000){
+    } 
+    else if (cargoLevel.value > 10000){
             cargoStatus.innerHTML =  "Cargo weight is too high for takeoff!";
             faultyItems.style.visibility = "visible";
-            launchStatus.innerHTML = "Shuttle not ready for launch";
+            launchStatus.innerHTML = "Shuttle is not ready for launch";
             launchStatus.style.color = "red";
-        } 
-        else {
-            launchStatus.innerHTML = "Shuttle ready for launch";
-            launchStatus.style.color = "green";
-        }
-    };
+    } 
+    else if (Number(cargoLevel) < 10000 && Number(fuelLevel) > 10000) {
+        list.style.visibility = "visible";
+        fuelStatus.innerHTML = "Enough fuel for journey";
+        cargoStatus.innerHTML = "Cargo weight is light enough for takeoff";
+        launchStatus.innerHTML = "Shuttle is ready for launch";
+        launchStatus.style.color = "green";
+    }
+    
 } 
 
 async function myFetch() {
     let planetsReturned;
 
-    planetsReturned = await fetch().then( function(response) {
+    planetsReturned = await fetch("https://handlers.education.launchcode.org/static/planets.json").then( function(response) {
        return response.json();});
 
     return planetsReturned;
