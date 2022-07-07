@@ -23,8 +23,8 @@ function validateInput(testInput) {
    } else if(isNaN(testInput) === true) {
     return "Not a Number"
    } else if(isNaN(testInput) === false) {
-    return "Is a Number"
-};
+    return "Is a Number";};
+}
 
 function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
     let faultyItems = document.getElementById("faultyItems");
@@ -55,7 +55,8 @@ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
             launchStatus.innerHTML = "Shuttle ready for launch";
             launchStatus.style.color = "green";
         }
-};
+    };
+} 
 
 async function myFetch() {
     let planetsReturned;
